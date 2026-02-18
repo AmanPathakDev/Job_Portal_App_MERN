@@ -20,7 +20,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: process.env.FRONTEND_URL,
   credentials: true,
 };
 app.use(cors(corsOptions));
@@ -38,7 +38,8 @@ app.get("*", (_, res) => {
   res.sendFile(path.resolve(_dirname, "frontend", "dist", "index.html"));
 });
 
-app.listen(PORT, () => {
-  connectDB();
-  console.log(`Server is running on port ${PORT}`);
+connectDB().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
 });
